@@ -23,12 +23,6 @@ public class CellService {
                 return getLegalMoveQueen(cell, boardService);
             case KING:
                 return getLegalMoveKing(cell, boardService);
-            default:
-                try {
-                    throw new Exception("EmptyCell");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
         }
         List<Cell> legalMoves = new ArrayList<>();
         return legalMoves;
@@ -276,7 +270,8 @@ public class CellService {
     }
 
     public Color opponentColor(Cell cell) {
-        return cell.getPiece().getColor() == Color.WHITE ? Color.BLACK : Color.WHITE;
+        ColorService colorService = new ColorService();
+        return colorService.reversColor(cell.getPiece().getColor());
     }
 
     public char getCharValue(Cell cell) {

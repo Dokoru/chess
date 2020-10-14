@@ -36,7 +36,7 @@ public class ConsoleView {
 
     private final Pattern correctMove = Pattern.compile("([a-hA-H][1-8])([-])([a-hA-H][1-8])", Pattern.CASE_INSENSITIVE);
 
-    public Cell splitIntoCoordinates(String val, BoardService boardService) {
+    public Cell getCellByCoordinate(String val, BoardService boardService) {
         int x = coordinate(Integer.parseInt(String.valueOf(val.charAt(1))));
         int y = coordinate(val.charAt(0));
 
@@ -48,7 +48,7 @@ public class ConsoleView {
         matcher.matches();
         String coordinates = matcher.group(1);
 
-        return splitIntoCoordinates(coordinates, boardService);
+        return getCellByCoordinate(coordinates, boardService);
     }
 
     public Cell getCellTo(String val, BoardService boardService){
@@ -56,7 +56,7 @@ public class ConsoleView {
         matcher.matches();
         String coordinates =  matcher.group(3);
 
-        return splitIntoCoordinates(coordinates, boardService);
+        return getCellByCoordinate(coordinates, boardService);
     }
 
     public boolean isCorrect(String val){

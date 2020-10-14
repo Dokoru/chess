@@ -1,9 +1,5 @@
 package chess.model.pieces;
 
-import chess.model.Cell;
-
-import java.util.List;
-
 public abstract class Piece {
 
     private PieceType type;
