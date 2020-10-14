@@ -3,27 +3,26 @@ package chess.service;
 import chess.model.Cell;
 import chess.model.pieces.*;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class PieceService {
+public class CellService {
 
-    public List<Cell> getLegalMove(Piece piece, BoardService boardService) {
-        switch (piece.getType()) {
+    public List<Cell> getLegalMove(Cell cell, BoardService boardService) {
+        switch (cell.getPiece().getType()) {
             case PAWN:
-                return getLegalMovePawn(piece, boardService);
+                return getLegalMovePawn(cell, boardService);
             case ROOK:
-                return getLegalMoveRook(piece, boardService);
+                return getLegalMoveRook(cell, boardService);
             case KNIGHT:
-                return getLegalMoveKnight(piece, boardService);
+                return getLegalMoveKnight(cell, boardService);
             case BISHOP:
-                return getLegalMoveBishop(piece, boardService);
+                return getLegalMoveBishop(cell, boardService);
             case QUEEN:
-                return getLegalMoveQueen(piece, boardService);
+                return getLegalMoveQueen(cell, boardService);
             case KING:
-                return getLegalMoveKing(piece, boardService);
+                return getLegalMoveKing(cell, boardService);
             default:
                 try {
                     throw new Exception("EmptyCell");
@@ -35,18 +34,13 @@ public class PieceService {
         return legalMoves;
     }
 
-    private List<Cell> getLegalMovePawn(Piece pawn, BoardService boardService) {
-        if (pawn.getType() != PieceType.PAWN) {
-            try {
-                throw new Exception("IncorrectPieceType");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    private List<Cell> getLegalMovePawn(Cell cell, BoardService boardService) {
+        Piece pawn = cell.getPiece();
+
         List<Cell> legalMoves = new ArrayList<>();
         Cell[][] board = boardService.getBoard();
-        int x = pawn.getPosition().getX();      //horizontal
-        int y = pawn.getPosition().getY();      //vertical
+        int x = cell.getX();      //horizontal
+        int y = cell.getY();      //vertical
         Color color = pawn.getColor();
         Cell newCell;       //cell to which a move can be made
 
@@ -95,17 +89,12 @@ public class PieceService {
         return legalMoves;
     }
 
-    private List<Cell> getLegalMoveRook(Piece rook, BoardService boardService) {
-        if (rook.getType() != PieceType.ROOK) {
-            try {
-                throw new Exception("IncorrectPieceType");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    private List<Cell> getLegalMoveRook(Cell cell, BoardService boardService) {
+        Piece rook = cell.getPiece();
+
         List<Cell> legalMoves = new ArrayList<>();
-        int x = rook.getPosition().getX();
-        int y = rook.getPosition().getY();
+        int x = cell.getX();
+        int y = cell.getY();
 
         for (int i = 1; x + i < 8; i++) {
             if (addMove(x + i, y, rook, legalMoves, boardService)) {
@@ -131,17 +120,12 @@ public class PieceService {
         return legalMoves;
     }
 
-    private List<Cell> getLegalMoveKnight(Piece knight, BoardService boardService) {
-        if (knight.getType() != PieceType.KNIGHT) {
-            try {
-                throw new Exception("IncorrectPieceType");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    private List<Cell> getLegalMoveKnight(Cell cell, BoardService boardService) {
+        Piece knight = cell.getPiece();
+
         List<Cell> legalMoves = new ArrayList<>();
-        int x = knight.getPosition().getX();
-        int y = knight.getPosition().getY();
+        int x = cell.getX();
+        int y = cell.getY();
 
         addMove(x - 2, y + 1, knight, legalMoves, boardService);
         addMove(x - 1, y + 2, knight, legalMoves, boardService);
@@ -155,17 +139,12 @@ public class PieceService {
         return legalMoves;
     }
 
-    private List<Cell> getLegalMoveBishop(Piece bishop, BoardService boardService) {
-        if (bishop.getType() != PieceType.BISHOP) {
-            try {
-                throw new Exception("IncorrectPieceType");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    private List<Cell> getLegalMoveBishop(Cell cell, BoardService boardService) {
+        Piece bishop = cell.getPiece();
+
         List<Cell> legalMoves = new ArrayList<>();
-        int x = bishop.getPosition().getX();
-        int y = bishop.getPosition().getY();
+        int x = cell.getX();
+        int y = cell.getY();
 
         for (int i = 1; x + i < 8 && y + i < 8; i++) {
             if (addMove(x + i, y + i, bishop, legalMoves, boardService)) {
@@ -191,41 +170,24 @@ public class PieceService {
         return legalMoves;
     }
 
-    private List<Cell> getLegalMoveQueen(Piece queen, BoardService boardService) {
-        if (queen.getType() != PieceType.QUEEN) {
-            try {
-                throw new Exception("IncorrectPieceType");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    private List<Cell> getLegalMoveQueen(Cell cell, BoardService boardService) {
         List<Cell> legalMoves = new ArrayList<>();
 
-        legalMoves.addAll(getLegalMoveRook(new Rook(queen), boardService));
-
-        Bishop bishop = new Bishop(queen);
-        List<Cell> lmb = getLegalMoveBishop(bishop, boardService);
-        legalMoves.addAll(lmb);
-
-       // legalMoves.addAll(getLegalMoveBishop(new Bishop(queen), boardService));
+        legalMoves.addAll(getLegalMoveRook(cell, boardService));
+        legalMoves.addAll(getLegalMoveBishop(cell, boardService));
 
         return legalMoves;
     }
 
-    private List<Cell> getLegalMoveKing(Piece king, BoardService boardService) {
-        if (king.getType() != PieceType.KING) {
-            try {
-                throw new Exception("IncorrectPieceType");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    private List<Cell> getLegalMoveKing(Cell cell, BoardService boardService) {
+        Piece king = cell.getPiece();
+
         List<Cell> legalMoves = new ArrayList<>();
         Cell[][] board = boardService.getBoard();
         Color color = king.getColor();
-        int x = king.getPosition().getX();
-        int y = king.getPosition().getY();
-        Set<Cell> cellUnderAttack = boardService.getCellUnderAttack(opponentColor(king));
+        int x = cell.getX();
+        int y = cell.getY();
+        Set<Cell> cellUnderAttack = boardService.getCellUnderAttack(opponentColor(cell));
         Cell newCell;
 
         for (int dx = -1; dx <=1; dx++) {       //common movement into a non-attacked cell
@@ -292,34 +254,34 @@ public class PieceService {
         return true;        //true == hasn't more moves
     }
 
-    public Piece changePieceType(Piece piece, PieceType type) {
-        switch (type) {
+    public Cell changePieceType(Cell cell, PieceType type) {
+        switch (cell.getPiece().getType()) {
             case KNIGHT:
-                piece = new Knight(piece);
+                cell.setPiece(new Knight(cell.getPiece()));
                 break;
             case ROOK:
-                piece = new Rook(piece);
+                cell.setPiece(new Rook(cell.getPiece()));
                 break;
             case BISHOP:
-                piece = new Bishop(piece);
+                cell.setPiece(new Bishop(cell.getPiece()));
                 break;
             case QUEEN:
-                piece = new Queen(piece);
+                cell.setPiece(new Queen(cell.getPiece()));
                 break;
             default:
-                piece = null;
+                cell.setPiece(null);
                 break;
         }
-        return piece;
+        return cell;
     }
 
-    public Color opponentColor(Piece piece) {
-        return piece.getColor() == Color.WHITE ? Color.BLACK : Color.WHITE;
+    public Color opponentColor(Cell cell) {
+        return cell.getPiece().getColor() == Color.WHITE ? Color.BLACK : Color.WHITE;
     }
 
-    public char getCharValue(Piece piece) {
-        if (piece.getColor() == Color.WHITE) {
-            switch (piece.getType()) {
+    public char getCharValue(Cell cell) {
+        if (cell.getPiece().getColor() == Color.WHITE) {
+            switch (cell.getPiece().getType()) {
                 case PAWN: return 'P';
                 case KNIGHT: return 'N';
                 case ROOK: return 'R';
@@ -329,7 +291,7 @@ public class PieceService {
             }
         }
         else {
-            switch (piece.getType()) {
+            switch (cell.getPiece().getType()) {
                 case PAWN: return 'p';
                 case KNIGHT: return 'n';
                 case ROOK: return 'r';

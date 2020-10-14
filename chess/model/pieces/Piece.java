@@ -8,27 +8,15 @@ public abstract class Piece {
 
     private PieceType type;
     private Color color;
-    private Cell position;
     private int firstTurn = 0;
-
-    //private List<Cell> legalMove;
-
-    //private char pieceChar;     //to console
 
     public Piece(PieceType type, Color color) {
         this.type = type;
         this.color = color;
     }
 
-    public Piece(PieceType type, Color color, Cell position) {
-        this.type = type;
-        this.color = color;
-        this.position = position;
-    }
-
     public Piece(Piece piece) {
         this.color = piece.getColor();
-        this.position = piece.getPosition();
         this.firstTurn = piece.getFirstTurn();
     }
 
@@ -46,14 +34,6 @@ public abstract class Piece {
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    public Cell getPosition() {
-        return position;
-    }
-
-    public void setPosition(Cell position) {
-        this.position = position;
     }
 
     public int getFirstTurn() {

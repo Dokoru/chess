@@ -2,7 +2,7 @@ package chess.view;
 
 import chess.model.Cell;
 import chess.service.BoardService;
-import chess.service.PieceService;
+import chess.service.CellService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,9 +26,9 @@ public class ConsoleView {
     }
 
     public String getStringCellValue(Cell cell){
-        PieceService pieceService = new PieceService();
+        CellService cellService = new CellService();
         if (cell != null && cell.getPiece() != null){
-            return "[" + pieceService.getCharValue(cell.getPiece()) + "]";
+            return "[" + cellService.getCharValue(cell) + "]";
         } else {
             return "[ ]";
         }
