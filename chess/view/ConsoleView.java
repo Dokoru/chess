@@ -7,7 +7,7 @@ import chess.service.PieceService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConsoleService {
+public class ConsoleView {
 
     public void printBoard(BoardService boardService) {
         Cell[][] board = boardService.getBoard();
