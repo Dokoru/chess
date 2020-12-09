@@ -1,6 +1,6 @@
 package chess.model.pieces;
 
-public abstract class Piece {
+public class Piece {
 
     private PieceType type;
     private Color color;

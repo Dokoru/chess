@@ -22,30 +22,30 @@ public class BoardService {
 
     public void fillBoard() {
         for (int i = 0; i < 8; i++) {
-            board[1][i].setPiece(new Pawn(Color.BLACK));
-            board[6][i].setPiece(new Pawn(Color.WHITE));
+            board[1][i].setPiece(new Piece(PieceType.PAWN, Color.BLACK));
+            board[6][i].setPiece(new Piece(PieceType.PAWN, Color.WHITE));
         }
 
-        board[0][0].setPiece(new Rook(Color.BLACK));
-        board[0][7].setPiece(new Rook(Color.BLACK));
-        board[7][0].setPiece(new Rook(Color.WHITE));
-        board[7][7].setPiece(new Rook(Color.WHITE));
+        board[0][0].setPiece(new Piece(PieceType.ROOK, Color.BLACK));
+        board[0][7].setPiece(new Piece(PieceType.ROOK, Color.BLACK));
+        board[7][0].setPiece(new Piece(PieceType.ROOK, Color.WHITE));
+        board[7][7].setPiece(new Piece(PieceType.ROOK, Color.WHITE));
 
-        board[0][1].setPiece(new Knight(Color.BLACK));
-        board[0][6].setPiece(new Knight(Color.BLACK));
-        board[7][1].setPiece(new Knight(Color.WHITE));
-        board[7][6].setPiece(new Knight(Color.WHITE));
+        board[0][1].setPiece(new Piece(PieceType.KNIGHT, Color.BLACK));
+        board[0][6].setPiece(new Piece(PieceType.KNIGHT, Color.BLACK));
+        board[7][1].setPiece(new Piece(PieceType.KNIGHT, Color.WHITE));
+        board[7][6].setPiece(new Piece(PieceType.KNIGHT, Color.WHITE));
 
-        board[0][2].setPiece(new Bishop(Color.BLACK));
-        board[0][5].setPiece(new Bishop(Color.BLACK));
-        board[7][2].setPiece(new Bishop(Color.WHITE));
-        board[7][5].setPiece(new Bishop(Color.WHITE));
+        board[0][2].setPiece(new Piece(PieceType.BISHOP, Color.BLACK));
+        board[0][5].setPiece(new Piece(PieceType.BISHOP, Color.BLACK));
+        board[7][2].setPiece(new Piece(PieceType.BISHOP, Color.WHITE));
+        board[7][5].setPiece(new Piece(PieceType.BISHOP, Color.WHITE));
 
-        board[0][3].setPiece(new Queen(Color.BLACK));
-        board[7][3].setPiece(new Queen(Color.WHITE));
+        board[0][3].setPiece(new Piece(PieceType.QUEEN, Color.BLACK));
+        board[7][3].setPiece(new Piece(PieceType.QUEEN, Color.WHITE));
 
-        board[0][4].setPiece(new King(Color.BLACK));
-        board[7][4].setPiece(new King(Color.WHITE));
+        board[0][4].setPiece(new Piece(PieceType.KING, Color.BLACK));
+        board[7][4].setPiece(new Piece(PieceType.KING, Color.WHITE));
     }
 
     public Cell getCell(int x, int y) {
@@ -67,17 +67,17 @@ public class BoardService {
 
     public void calcCellUnderAttack() {
         resetCellUnderAttack();
-        CellService cellService = new CellService();
+        PieceService pieceService = new PieceService();
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (board[i][j] != null && board[i][j].getPiece() != null &&
                         board[i][j].getPiece().getColor() == Color.WHITE) {
-                    cellUnderAttack.get(Color.WHITE).addAll(cellService.getLegalMove(board[i][j], this));
+                    cellUnderAttack.get(Color.WHITE).addAll(pieceService.getLegalMove(board[i][j], this));
                 }
                 if (board[i][j] != null && board[i][j].getPiece() != null &&
                         board[i][j].getPiece().getColor() == Color.BLACK) {
-                    cellUnderAttack.get(Color.BLACK).addAll(cellService.getLegalMove(board[i][j], this));
+                    cellUnderAttack.get(Color.BLACK).addAll(pieceService.getLegalMove(board[i][j], this));
                 }
             }
         }
@@ -121,8 +121,7 @@ public class BoardService {
 
     private void pawnPromotion(Cell cell, PieceType type) {
         if (cell != null && cell.getPiece() != null && cell.getPiece().getType() == PieceType.PAWN) {
-            CellService cellService = new CellService();
-            cell.setPiece(cellService.changePieceType(cell, type).getPiece());
+            cell.getPiece().setType(type);
         }
     }
 
@@ -166,7 +165,7 @@ public class BoardService {
     }
 
     public boolean isLegalMove(Cell cellFrom, Cell cellTo) {
-        CellService cellService = new CellService();
+        PieceService pieceService = new PieceService();
         Piece pieceFrom = cellFrom.getPiece();
         Piece pieceTo = cellTo.getPiece();
 
@@ -174,8 +173,8 @@ public class BoardService {
                 (pieceTo != null && pieceTo.getColor() == getCurrentPlayer())) {
             return false;
         }
-        else if (cellService.getLegalMove(cellFrom, this).size() > 0 &&
-                cellService.getLegalMove(cellFrom, this).contains(cellTo)) {
+        else if (pieceService.getLegalMove(cellFrom, this).size() > 0 &&
+                pieceService.getLegalMove(cellFrom, this).contains(cellTo)) {
             cellTo.setPiece(pieceFrom);
             cellFrom.setPiece(null);
             calcCellUnderAttack();
@@ -218,10 +217,10 @@ public class BoardService {
         if (!isCheck(color)) return false;
 
         List<Cell> pieces = getAllPieceCell(color);
-        CellService cellService = new CellService();
+        PieceService pieceService = new PieceService();
         for (Cell cellFrom : pieces) {
             Piece pieceFrom = cellFrom.getPiece();
-            List<Cell> moves = cellService.getLegalMove(cellFrom, this);
+            List<Cell> moves = pieceService.getLegalMove(cellFrom, this);
             for (Cell cellTo : moves) {
                 Piece pieceTo = cellTo.getPiece();
                 cellTo.setPiece(pieceFrom);
@@ -255,8 +254,8 @@ public class BoardService {
     }
 
     public List<Cell> getAllPieceAttackedCell(Cell cell) {
-        CellService cellService = new CellService();
-        return cellService.getLegalMove(cell, this);
+        PieceService pieceService = new PieceService();
+        return pieceService.getLegalMove(cell, this);
     }
 
     public boolean isFinished() {
